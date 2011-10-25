@@ -7,6 +7,7 @@
 
 --   Globals   --
 
+platform.apilevel = '1.0'
 device = { api, hasColor, isCalc, theType, lang }
 device.api = platform.apilevel
 device.hasColor = platform.isColorDisplay()
@@ -21,11 +22,15 @@ function on.create()
 end
 
 function on.resize()
-	if device.api == "1.1" then platform.window:setPreferredSize(0,0) end
-    
+	--if device.api == "1.1" then platform.window:setPreferredSize(0,0) end
     device.isCalc = (platform.window:width() < 320)
     device.theType = platform.isDeviceModeRendering() and "handheld" or "software"
 end
+
+function on.paint(gc)
+
+end
+
 
 
 --  End Events --
