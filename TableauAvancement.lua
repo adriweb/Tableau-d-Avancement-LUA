@@ -65,14 +65,10 @@ function Tableau:init(data)
 	self.xmax = data["xmax"]
 	self.reactLim = data["reactLim"]
 	self.nbrCol = self.nbrReact + self.nbrProd
-	self.equation = ""
+	self.equation= {}
 	for k,v in pairs(self.noms) do
-	    self.equation = self.equation .. tostring(self.coeff[k]) .. " " .. tostring(self.noms[k])
-	    if k ~= self.nbrReact then
-	        if k < self.nbrCol then self.equation = self.equation .. " + " end
-	    else
-	        self.equation = self.equation .. " -> "
-	    end
+	    table.insert(self.equation,tostring(self.coeff[k]) .. " " .. tostring(self.noms[k]))
+	    --print(self.equation[k])
 	end
 	--------
 	self:resizeGC()
@@ -87,7 +83,7 @@ function Tableau:resizeGC()
 	self.yEnd = self.yStart + self.height
 	self.stepX = (1/(1+self.nbrCol))*self.width
 	self.stepY = .25*self.height
-	self.txtSize = 9
+	self.txtSize = 9+(screenX-pww())/50
 end
 
 function Tableau:paint(gc)
@@ -105,7 +101,14 @@ end
 
 function Tableau:paintTexts(gc)
     gc:setFont("sansserif", "r", self.txtSize)
-    gc:drawString(self.equation,self.xStart+1.5*self.stepX,self.yStart,"top")
+    -- Equation
+    for k,v in pairs(self.equation) do
+        gc:drawString(self.equation[k],self.xStart+(k+.3)*self.stepX,self.yStart+.25*self.stepY,"top")
+    end
+    gc:drawString("->",self.xStart+(1+self.nbrReact)*self.stepX,self.yStart+.25*self.stepY,"top")
+    -- 1ere colonne
+    
+    -- autres colonnes
 end
 
 -- End Classes --
@@ -125,7 +128,7 @@ function on.create()
 end
 
 function on.resize()
-	--if device.api == "1.1" then platform.window:setPreferredSize(0,0) end
+    if device.api == "1.1" then platform.window:setPreferredSize(0,0) end
     device.isCalc = (platform.window:width() < 320)
     device.theType = platform.isDeviceModeRendering() and "handheld" or "software"
     screenX = pww()
@@ -134,8 +137,8 @@ function on.resize()
 end
 
 function on.charIn(key)
-    if key == "*" or key == "+" then print("plus") screenX = screenX + 25 screenY = screenY + 25 end
-    if key == "/" or key == "-" then screenX = screenX - 25 screenY = screenY - 25 end
+    if screenY < pwh()+100 and (key == "*" or key == "+") then screenX = screenX + 25 screenY = screenY + 25 end
+    if screenX > pww() and (key == "/" or key == "-") then screenX = screenX - 25 screenY = screenY - 25 end
     if tableau then tableau:resizeGC() end
     screenRefresh()
 end
