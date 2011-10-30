@@ -65,9 +65,11 @@ function Tableau:init(data)
 	self.xmax = data["xmax"]
 	self.reactLim = data["reactLim"]
 	self.nbrCol = self.nbrReact + self.nbrProd
-	self.equation= {}
+	self.equation1 = {}
+	self.equation2 = {}
 	for k,v in pairs(self.noms) do
-	    table.insert(self.equation,tostring(self.coeff[k]) .. " " .. tostring(self.noms[k]))
+	    table.insert(self.equation1, "   " .. tostring(self.noms[k]))
+	    table.insert(self.equation2,(tostring(self.coeff[k])~="1" and tostring(self.coeff[k]) or ""))
 	    --print(self.equation[k])
 	end
 	--------
@@ -95,6 +97,9 @@ function Tableau:paint(gc)
 	gc:drawLine(self.xStart*1.52+(1+self.nbrReact)*self.stepX*1.005,self.yStart+self.stepY,self.xStart*1.52+(1+self.nbrReact)*self.stepX*1.005,self.yEnd-1)
 	for i=self.xStart*1.65+2*self.stepX,self.xEnd,0.95*self.stepX do
 	    gc:drawLine(i,self.yStart+self.stepY,i,self.yEnd-1)
+	    if i ~= (self.xStart*1.65+2*self.stepX)+(0.95*self.stepX) then
+	        gc:drawString("+",self.xStart+i-.35*self.stepX,self.yStart+.22*self.stepY,"top")
+	    end
 	end
 	self:paintTexts(gc)
 end
@@ -102,12 +107,21 @@ end
 function Tableau:paintTexts(gc)
     gc:setFont("sansserif", "r", self.txtSize)
     -- Equation
-    for k,v in pairs(self.equation) do
-        gc:drawString(self.equation[k],self.xStart+(k+.3)*self.stepX,self.yStart+.25*self.stepY,"top")
+    for k,v in pairs(self.equation1) do
+        gc:drawString(self.equation1[k],self.xStart+(k+.3)*self.stepX,self.yStart+.25*self.stepY,"top")
+        gc:setColorRGB(255,0,0)
+        gc:drawString(self.equation2[k],self.xStart+(k+.31)*self.stepX,self.yStart+.25*self.stepY,"top")
+        gc:setColorRGB(0,0,0)
     end
     gc:drawString("->",self.xStart+(1+self.nbrReact)*self.stepX,self.yStart+.25*self.stepY,"top")
     -- 1ere colonne
-    
+    gc:drawString("Etat initial",self.xStart*1.3,self.yStart+1.1*self.stepY,"top")
+    gc:drawString("x = x(init)",self.xStart*1.4,self.yStart+1.5*self.stepY,"top")
+    gc:drawString("En cours",self.xStart*1.15,self.yStart+2.1*self.stepY,"top")
+    gc:drawString("x = x",self.xStart*1.4,self.yStart+2.5*self.stepY,"top")
+    gc:drawString("Etat final",self.xStart*1.3,self.yStart+3.1*self.stepY,"top")
+    gc:drawString("x = x(f)",self.xStart*1.4,self.yStart+3.5*self.stepY,"top")
+    --gc:drawString(string.uchar(8308),10,10,"top")
     -- autres colonnes
 end
 
@@ -128,7 +142,7 @@ function on.create()
 end
 
 function on.resize()
-    if device.api == "1.1" then platform.window:setPreferredSize(0,0) end
+    --if device.api == "1.1" then platform.window:setPreferredSize(0,0) end
     device.isCalc = (platform.window:width() < 320)
     device.theType = platform.isDeviceModeRendering() and "handheld" or "software"
     screenX = pww()
