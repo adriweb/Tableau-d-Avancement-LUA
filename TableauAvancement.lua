@@ -99,6 +99,8 @@ function Tableau:paint(gc)
 	    gc:drawLine(i,self.yStart+self.stepY,i,self.yEnd-1)
 	    if i ~= (self.xStart*1.65+2*self.stepX)+(0.95*self.stepX) then
 	        gc:drawString("+",self.xStart+i-.35*self.stepX,self.yStart+.22*self.stepY,"top")
+	    else
+	        gc:drawString("-",self.xStart+i-.35*self.stepX,self.yStart+.21*self.stepY,"top")
 	    end
 	end
 	self:paintTexts(gc)
@@ -121,8 +123,35 @@ function Tableau:paintTexts(gc)
     gc:drawString("x = x",self.xStart*1.4,self.yStart+2.5*self.stepY,"top")
     gc:drawString("Etat final",self.xStart*1.3,self.yStart+3.1*self.stepY,"top")
     gc:drawString("x = x(f)",self.xStart*1.4,self.yStart+3.5*self.stepY,"top")
-    --gc:drawString(string.uchar(8308),10,10,"top")
     -- autres colonnes
+    for k,v in pairs(self.moles) do
+        gc:setColorRGB(0,150,0)
+        gc:drawString(self.moles[k],self.xStart+(k+.35)*self.stepX,self.yStart+1.25*self.stepY,"top")
+        gc:setColorRGB(0,0,0)
+        gc:drawString(" mol.",gc:getStringWidth(self.moles[k])+self.xStart+(k+.35)*self.stepX,self.yStart+1.25*self.stepY,"top")
+    end
+    for k,v in pairs(self.moles) do
+        gc:setColorRGB(0,150,0)
+        gc:drawString(self.moles[k],self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+        gc:setColorRGB(0,0,0)
+        gc:drawString((k<=self.nbrReact) and " - " or " + ",gc:getStringWidth(self.moles[k])+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+        gc:setColorRGB(255,0,0)
+        gc:drawString(tostring(self.coeff[k]),gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+        gc:setColorRGB(0,0,0)
+        gc:drawString(" x",gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+gc:getStringWidth(tostring(self.coeff[k]))+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+    end
+    for k,v in pairs(self.restes) do
+        gc:setColorRGB(0,150,0)
+        gc:drawString(self.moles[k],self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:setColorRGB(0,0,0)
+        gc:drawString((k<=self.nbrReact) and " - " or " + ",gc:getStringWidth(self.moles[k])+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:setColorRGB(150,0,150)
+        gc:drawString(tostring(self.coeff[k]*self.xmax),gc:getStringWidth(" + ")+gc:getStringWidth(tostring(self.moles[k]))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:setColorRGB(0,0,0)
+        gc:drawString(" = ",self.xStart+(k+.3)*self.stepX,self.yStart+3.5*self.stepY,"top")
+        gc:setColorRGB(0,0,150)
+        gc:drawString(tostring(self.restes[k]),gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+self.xStart+(k+.3)*self.stepX,self.yStart+3.5*self.stepY,"top")
+    end
 end
 
 -- End Classes --
