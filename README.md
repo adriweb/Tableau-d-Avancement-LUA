@@ -1,8 +1,13 @@
 # Tableau d'avancement pour TI-Nspire.
 
+### Fait par Adrien "Adriweb" Bertrand.
+
+
 ### Licence : Creative Commons 2.0 BY-SA : [fr](http://creativecommons.org/licenses/by-sa/2.0/fr/legalcode)/[en](http://creativecommons.org/licenses/by-sa/2.0/legalcode)
 
-### Fait par Adrien "Adriweb" Bertrand.
+
+![Screenshot du tableau](http://i.imgur.com/mhFOu.jpg)
+![Screenshot des détails](http://i.imgur.com/kSYAb.jpg)
 
 ## Comment utiliser :
 Vous avez juste à transférer le document .tns sur votre calculatrice TI-Nspire.

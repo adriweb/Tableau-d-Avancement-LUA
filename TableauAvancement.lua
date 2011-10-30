@@ -5,6 +5,15 @@
 -- Parts are from BetterLuaAPI
 -- Source : github.com/adriweb
 
+-- Version 1.0
+
+-- Thanks to Critor, Levak, Jim Bauwens, TI-Planet, Omnimaga...
+
+-- License : Creative Commons 2.0 BY-SA : 
+-- [fr] : http://creativecommons.org/licenses/by-sa/2.0/fr/legalcode
+-- [en] : http://creativecommons.org/licenses/by-sa/2.0/legalcode
+
+
 --   Globals   --
 
 platform.apilevel = '1.0'
@@ -33,20 +42,8 @@ local function pwh()
 	return platform.window:height()
 end
 
-local function drawPoint(x, y)
-	myGC:fillRect(x, y, 1, 1)
-end
-
-local function drawCircle(x, y, diameter)
-	myGC:drawArc(x - diameter/2, y - diameter/2, diameter,diameter,0,360)
-end
-
-local function drawCenteredString(str)
-	myGC:drawString(str, (pww() - myGC:getStringWidth(str)) / 2, pwh() / 2, "middle")
-end
-
-local function drawXCenteredString(str,y)
-	myGC:drawString(str, (pww() - myGC:getStringWidth(str)) / 2, y, "top")
+local function drawXCenteredString(gc, str, y)
+	gc:drawString(str, (pww() - gc:getStringWidth(str)) / 2, y, "top")
 end
 
 --  End BLAPI  --
@@ -193,7 +190,9 @@ function on.paint(gc)
 	
 	if theError ~= "" then
 	    print(theError)
-	    gc:drawString(theError,5,5,"top")
+	    drawXCenteredString(gc,theError,5)
+	else
+	    drawXCenteredString(gc,"Tableau d'Avancement Lua  -  Adriweb  - TIPlanet.org",5)	
 	end
 end
 
@@ -206,12 +205,7 @@ end
 --  Functions  --
 function recupData()
 	theData = { nbrReact = var.recall("nbrreact"), nbrProd = var.recall("nbrprod"), noms = var.recall("lnoms"), coeffs = var.recall("lcoeff"), moles = var.recall("lmoles"), restes = var.recall("lreste"), reactLim = var.recall("reactlim"), xmax = var.recall("xmax")}
-	if tonumber(theData["xmax"]) > 9000 or var.recall("luasignal") < 42 then theError = "Veuillez exécuter le programme avancement() avant de consulter le tableau !" else theError = "" end
+	if tonumber(theData["xmax"]) > 9000 or var.recall("luasignal") < 42 then theError = "Veuillez exécuter le programme avancement() !" else theError = "" end
 end
 
 --  End Func.  --
-
-
-
-
-
