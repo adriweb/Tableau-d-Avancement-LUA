@@ -122,38 +122,38 @@ function Tableau:paintTexts(gc)
     gc:drawString("Etat final",self.xStart*1.3,self.yStart+3.1*self.stepY,"top")
     gc:setFont("sansserif", "r", self.txtSize*.75)
     gc:drawString("x       =",self.xStart*1.3,self.yStart+3.5*self.stepY,"top")
-    gc:drawString("max",self.xStart*1.7,self.yStart+3.5*self.stepY*1.02,"top")
+    gc:drawString("max",self.xStart*1.3+0.9*gc:getStringWidth("x "),self.yStart+3.5*self.stepY*1.02,"top")
     gc:setColorRGB(120,120,0)
     gc:drawString(myRound(self.xmax,5),gc:getStringWidth("xmax= ")+self.xStart*1.35,self.yStart+3.5*self.stepY,"top")
     gc:setFont("sansserif", "r", self.txtSize)
     -- autres colonnes
     for k,v in pairs(self.moles) do
         gc:setColorRGB(0,150,0)
-        gc:drawString(self.moles[k],self.xStart+(k+.35)*self.stepX,self.yStart+1.25*self.stepY,"top")
+        gc:drawString(self.moles[k],0.25*(self.stepY-gc:getStringWidth(self.moles[k]))+self.xStart+(k+.35)*self.stepX,self.yStart+1.12*self.stepY,"top")
         gc:setColorRGB(0,0,0)
-        gc:drawString(" mol.",gc:getStringWidth(self.moles[k])+self.xStart+(k+.35)*self.stepX,self.yStart+1.25*self.stepY,"top")
-    end
-    for k,v in pairs(self.moles) do
+        gc:drawString("moles",self.xStart+(k+.35)*self.stepX,self.yStart+1.45*self.stepY,"top")
+    -- end
+    -- for k,v in pairs(self.coeff) do
         gc:setColorRGB(0,150,0)
-        gc:drawString(self.moles[k],self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+        gc:drawString(myRound(self.moles[k],3),self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
         gc:setColorRGB(0,0,0)
-        gc:drawString((k<=self.nbrReact) and "-" or " + ",gc:getStringWidth(self.moles[k])+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+        gc:drawString((k<=self.nbrReact) and "-" or "+",gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
         gc:setColorRGB(255,0,0)
-        gc:drawString(tostring(self.coeff[k]),gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+        gc:drawString((tostring(self.coeff[k])~="1" and tostring(self.coeff[k]) or ""),gc:getStringWidth(myRound(self.moles[k],3))+gc:getStringWidth("+")+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
         gc:setColorRGB(0,0,0)
-        gc:drawString(" x",gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+gc:getStringWidth(tostring(self.coeff[k]))+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
-    end
-    for k,v in pairs(self.restes) do
+        gc:drawString(" x",gc:getStringWidth(myRound(self.moles[k],3))+0.8*gc:getStringWidth("+")+gc:getStringWidth((tostring(self.coeff[k])~="1" and tostring(self.coeff[k]) or ""))+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+   -- end
+   -- for k,v in pairs(self.restes) do
         gc:setColorRGB(0,150,0)
-        gc:drawString(self.moles[k],self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:drawString(myRound(self.moles[k],3),self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(0,0,0)
-        gc:drawString((k<=self.nbrReact) and "-" or "+",gc:getStringWidth(self.moles[k])+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:drawString((k<=self.nbrReact) and "-" or "+",gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(150,0,150)
-        gc:drawString(tostring(self.coeff[k]*self.xmax),gc:getStringWidth(" + ")+gc:getStringWidth(tostring(self.moles[k]))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:drawString(tostring(self.coeff[k]*self.xmax),gc:getStringWidth(" +")+gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(0,0,0)
         gc:drawString(" = ",self.xStart+(k+.2)*self.stepX,self.yStart+3.5*self.stepY,"top")
         gc:setColorRGB(0,0,150)
-        gc:drawString(myRound(self.restes[k],3),gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+self.xStart+(k+.1)*self.stepX,self.yStart+3.5*self.stepY,"top")
+        gc:drawString(myRound(self.restes[k],3),gc:getStringWidth(" + ")+self.xStart+(k+.23)*self.stepX,self.yStart+3.5*self.stepY,"top")
     end
 end
 
@@ -214,7 +214,7 @@ end
 
 function myRound(nbr, preclog)
     local prec = math.pow(10,preclog)
-    return math.floor(prec*nbr)*(1/prec)
+    return (pwh()<250 and math.floor(prec*nbr)*(1/prec) or nbr)
 end
 
 function recupData()
