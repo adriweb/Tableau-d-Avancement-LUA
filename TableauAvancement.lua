@@ -5,7 +5,7 @@
 -- Parts are from BetterLuaAPI
 -- Source : github.com/adriweb
 
--- Version 1.0
+-- Version 1.1
 
 -- Thanks to Critor, Levak, Jim Bauwens, TI-Planet, Omnimaga...
 
@@ -87,6 +87,7 @@ end
 
 function Tableau:paint(gc)
 	gc:drawRect(self.xStart,self.yStart,self.width,self.height+1)
+	gc:drawLine(self.xStart,self.yStart,self.xStart+self.stepX*1.19,self.yStart+self.stepY)
 	for i=self.yStart+self.stepY,self.yEnd,self.stepY do
 	    gc:drawLine(self.xStart,i,self.xEnd,i)
 	end
@@ -116,10 +117,15 @@ function Tableau:paintTexts(gc)
     -- 1ere colonne
     gc:drawString("Etat initial",self.xStart*1.3,self.yStart+1.1*self.stepY,"top")
     gc:drawString("x = x(init)",self.xStart*1.4,self.yStart+1.5*self.stepY,"top")
-    gc:drawString("En cours",self.xStart*1.15,self.yStart+2.1*self.stepY,"top")
+    gc:drawString("En cours",self.xStart*1.3,self.yStart+2.1*self.stepY,"top")
     gc:drawString("x = x",self.xStart*1.4,self.yStart+2.5*self.stepY,"top")
     gc:drawString("Etat final",self.xStart*1.3,self.yStart+3.1*self.stepY,"top")
-    gc:drawString("x = x(f)",self.xStart*1.4,self.yStart+3.5*self.stepY,"top")
+    gc:setFont("sansserif", "r", self.txtSize*.75)
+    gc:drawString("x       =",self.xStart*1.3,self.yStart+3.5*self.stepY,"top")
+    gc:drawString("max",self.xStart*1.7,self.yStart+3.5*self.stepY*1.02,"top")
+    gc:setColorRGB(120,120,0)
+    gc:drawString(myRound(self.xmax,5),gc:getStringWidth("xmax= ")+self.xStart*1.35,self.yStart+3.5*self.stepY,"top")
+    gc:setFont("sansserif", "r", self.txtSize)
     -- autres colonnes
     for k,v in pairs(self.moles) do
         gc:setColorRGB(0,150,0)
@@ -131,7 +137,7 @@ function Tableau:paintTexts(gc)
         gc:setColorRGB(0,150,0)
         gc:drawString(self.moles[k],self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
         gc:setColorRGB(0,0,0)
-        gc:drawString((k<=self.nbrReact) and " - " or " + ",gc:getStringWidth(self.moles[k])+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
+        gc:drawString((k<=self.nbrReact) and "-" or " + ",gc:getStringWidth(self.moles[k])+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
         gc:setColorRGB(255,0,0)
         gc:drawString(tostring(self.coeff[k]),gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
         gc:setColorRGB(0,0,0)
@@ -141,13 +147,13 @@ function Tableau:paintTexts(gc)
         gc:setColorRGB(0,150,0)
         gc:drawString(self.moles[k],self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(0,0,0)
-        gc:drawString((k<=self.nbrReact) and " - " or " + ",gc:getStringWidth(self.moles[k])+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:drawString((k<=self.nbrReact) and "-" or "+",gc:getStringWidth(self.moles[k])+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(150,0,150)
         gc:drawString(tostring(self.coeff[k]*self.xmax),gc:getStringWidth(" + ")+gc:getStringWidth(tostring(self.moles[k]))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(0,0,0)
-        gc:drawString(" = ",self.xStart+(k+.3)*self.stepX,self.yStart+3.5*self.stepY,"top")
+        gc:drawString(" = ",self.xStart+(k+.2)*self.stepX,self.yStart+3.5*self.stepY,"top")
         gc:setColorRGB(0,0,150)
-        gc:drawString(tostring(self.restes[k]),gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+self.xStart+(k+.3)*self.stepX,self.yStart+3.5*self.stepY,"top")
+        gc:drawString(myRound(self.restes[k],3),gc:getStringWidth(self.moles[k])+gc:getStringWidth(" + ")+self.xStart+(k+.1)*self.stepX,self.yStart+3.5*self.stepY,"top")
     end
 end
 
@@ -192,7 +198,9 @@ function on.paint(gc)
 	    print(theError)
 	    drawXCenteredString(gc,theError,5)
 	else
+	    gc:setFont("serif", "r", 10)
 	    drawXCenteredString(gc,"Tableau d'Avancement Lua  -  Adriweb  - TIPlanet.org",5)	
+	    gc:setFont("sansserif", "r", tableau.txtSize)
 	end
 end
 
@@ -203,6 +211,12 @@ end
 --  End Events --
 
 --  Functions  --
+
+function myRound(nbr, preclog)
+    local prec = math.pow(10,preclog)
+    return math.floor(prec*nbr)*(1/prec)
+end
+
 function recupData()
 	theData = { nbrReact = var.recall("nbrreact"), nbrProd = var.recall("nbrprod"), noms = var.recall("lnoms"), coeffs = var.recall("lcoeff"), moles = var.recall("lmoles"), restes = var.recall("lreste"), reactLim = var.recall("reactlim"), xmax = var.recall("xmax")}
 	if tonumber(theData["xmax"]) > 9000 or var.recall("luasignal") < 42 then theError = "Veuillez exécuter le programme avancement() !" else theError = "" end
