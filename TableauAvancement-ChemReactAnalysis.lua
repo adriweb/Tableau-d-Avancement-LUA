@@ -5,7 +5,7 @@
 -- Parts are from BetterLuaAPI
 -- Source : github.com/adriweb
 
--- Version 1.1
+-- Version 1.2
 
 -- Thanks to Critor, Levak, Jim Bauwens, TI-Planet, Omnimaga...
 
@@ -65,7 +65,7 @@ function Tableau:init(data)
 	self.equation1 = {}
 	self.equation2 = {}
 	for k,v in pairs(self.noms) do
-	    table.insert(self.equation1, "   " .. tostring(self.noms[k]))
+	    table.insert(self.equation1, (self.coeff[k]>9 and "     " or "   ") .. tostring(self.noms[k]))
 	    table.insert(self.equation2,(tostring(self.coeff[k])~="1" and tostring(self.coeff[k]) or ""))
 	    --print(self.equation[k])
 	end
@@ -87,7 +87,7 @@ end
 
 function Tableau:paint(gc)
 	gc:drawRect(self.xStart,self.yStart,self.width,self.height+1)
-	gc:drawLine(self.xStart,self.yStart,self.xStart+self.stepX*1.19,self.yStart+self.stepY)
+	gc:drawLine(self.xStart,self.yStart,self.xStart*1.65+self.stepX,self.yStart+self.stepY)
 	for i=self.yStart+self.stepY,self.yEnd,self.stepY do
 	    gc:drawLine(self.xStart,i,self.xEnd,i)
 	end
@@ -115,25 +115,26 @@ function Tableau:paintTexts(gc)
     end
     gc:drawString("->",self.xStart+(1+self.nbrReact)*self.stepX,self.yStart+.25*self.stepY,"top")
     -- 1ere colonne
-    gc:drawString("Etat initial",self.xStart*1.3,self.yStart+1.1*self.stepY,"top")
+    gc:setFont("sansserif", "b", self.txtSize)
+    gc:drawString((device.lang=="fr" and "Etat initial" or "Initial State"),self.xStart*1.3,self.yStart+1.1*self.stepY,"top")
+    gc:drawString((device.lang=="fr" and "En cours" or "In progress"),self.xStart*1.3,self.yStart+2.1*self.stepY,"top")
+    gc:drawString((device.lang=="fr" and "Etat final" or "Final State"),self.xStart*1.3,self.yStart+3.1*self.stepY,"top")
+    gc:setFont("sansserif", "r", self.txtSize)
     gc:drawString("x = x(init)",self.xStart*1.4,self.yStart+1.5*self.stepY,"top")
-    gc:drawString("En cours",self.xStart*1.3,self.yStart+2.1*self.stepY,"top")
     gc:drawString("x = x",self.xStart*1.4,self.yStart+2.5*self.stepY,"top")
-    gc:drawString("Etat final",self.xStart*1.3,self.yStart+3.1*self.stepY,"top")
-    gc:setFont("sansserif", "r", self.txtSize*.75)
+    gc:setFont("sansserif", "r", self.txtSize*.8)
     gc:drawString("x       =",self.xStart*1.3,self.yStart+3.5*self.stepY,"top")
     gc:drawString("max",self.xStart*1.3+0.9*gc:getStringWidth("x "),self.yStart+3.5*self.stepY*1.02,"top")
     gc:setColorRGB(120,120,0)
-    gc:drawString(myRound(self.xmax,5),gc:getStringWidth("xmax= ")+self.xStart*1.35,self.yStart+3.5*self.stepY,"top")
+    gc:drawString(myRound(self.xmax,5),gc:getStringWidth("xmax= ")+self.xStart*1.4,self.yStart+3.52*self.stepY,"top")
     gc:setFont("sansserif", "r", self.txtSize)
     -- autres colonnes
-    for k,v in pairs(self.moles) do
+    for k=1,#self.moles do
         gc:setColorRGB(0,150,0)
         gc:drawString(self.moles[k],0.25*(self.stepY-gc:getStringWidth(self.moles[k]))+self.xStart+(k+.35)*self.stepX,self.yStart+1.12*self.stepY,"top")
         gc:setColorRGB(0,0,0)
-        gc:drawString("moles",self.xStart+(k+.35)*self.stepX,self.yStart+1.45*self.stepY,"top")
-    -- end
-    -- for k,v in pairs(self.coeff) do
+        gc:drawString(self.moles[k]>1 and "moles" or "mole",self.xStart+(k+.35)*self.stepX,self.yStart+1.45*self.stepY,"top")
+
         gc:setColorRGB(0,150,0)
         gc:drawString(myRound(self.moles[k],3),self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
         gc:setColorRGB(0,0,0)
@@ -142,14 +143,13 @@ function Tableau:paintTexts(gc)
         gc:drawString((tostring(self.coeff[k])~="1" and tostring(self.coeff[k]) or ""),gc:getStringWidth(myRound(self.moles[k],3))+gc:getStringWidth("+")+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
         gc:setColorRGB(0,0,0)
         gc:drawString(" x",gc:getStringWidth(myRound(self.moles[k],3))+0.8*gc:getStringWidth("+")+gc:getStringWidth((tostring(self.coeff[k])~="1" and tostring(self.coeff[k]) or ""))+self.xStart+(k+.3)*self.stepX,self.yStart+2.25*self.stepY,"top")
-   -- end
-   -- for k,v in pairs(self.restes) do
+
         gc:setColorRGB(0,150,0)
         gc:drawString(myRound(self.moles[k],3),self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(0,0,0)
         gc:drawString((k<=self.nbrReact) and "-" or "+",gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(150,0,150)
-        gc:drawString(tostring(self.coeff[k]*self.xmax),gc:getStringWidth(" +")+gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:drawString(myRound(self.coeff[k]*self.xmax,4),gc:getStringWidth(" +")+gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(0,0,0)
         gc:drawString(" = ",self.xStart+(k+.2)*self.stepX,self.yStart+3.5*self.stepY,"top")
         gc:setColorRGB(0,0,150)
@@ -199,7 +199,8 @@ function on.paint(gc)
 	    drawXCenteredString(gc,theError,5)
 	else
 	    gc:setFont("serif", "r", 10)
-	    drawXCenteredString(gc,"Tableau d'Avancement Lua  -  Adriweb  - TIPlanet.org",5)	
+	    local msg = (device.lang == "fr" and "Tableau d'Avancement Lua" or "Chemical Reaction Analysis")
+	    drawXCenteredString(gc, msg .. "  -  Adriweb  - TIPlanet.org",5)
 	    gc:setFont("sansserif", "r", tableau.txtSize)
 	end
 end

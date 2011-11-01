@@ -15,7 +15,7 @@ Votre TI-Nspire doit cependant posséder l'OS 3.0 (ou plus récent) pour que le 
 Les dernières mises-à-jour d'OS sont disponibles [sur le site de TI](http://education.ti.com).
 
 ## Etudier une réaction chimique :
-Une fois le .tns transféré et le document ouvert, lancer le programme "avancement()".
+Une fois le .tns transféré et le document ouvert, lancer le programme "avancement_fr()".
 Suivez les instructions à l'écran.
 Allez sur l'autre onglet pour visualiser le tableau d'avancement.
 
