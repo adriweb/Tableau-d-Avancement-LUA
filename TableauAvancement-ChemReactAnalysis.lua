@@ -5,7 +5,7 @@
 -- Parts are from BetterLuaAPI
 -- Source : github.com/adriweb
 
--- Version 1.2
+-- Version 1.1
 
 -- Thanks to Critor, Levak, Jim Bauwens, TI-Planet, Omnimaga...
 
@@ -87,7 +87,7 @@ end
 
 function Tableau:paint(gc)
 	gc:drawRect(self.xStart,self.yStart,self.width,self.height+1)
-	gc:drawLine(self.xStart,self.yStart,self.xStart*1.65+self.stepX,self.yStart+self.stepY)
+	gc:drawLine(self.xStart,self.yStart,self.xStart+self.stepX*1.19,self.yStart+self.stepY)
 	for i=self.yStart+self.stepY,self.yEnd,self.stepY do
 	    gc:drawLine(self.xStart,i,self.xEnd,i)
 	end
@@ -115,18 +115,16 @@ function Tableau:paintTexts(gc)
     end
     gc:drawString("->",self.xStart+(1+self.nbrReact)*self.stepX,self.yStart+.25*self.stepY,"top")
     -- 1ere colonne
-    gc:setFont("sansserif", "b", self.txtSize)
     gc:drawString((device.lang=="fr" and "Etat initial" or "Initial State"),self.xStart*1.3,self.yStart+1.1*self.stepY,"top")
-    gc:drawString((device.lang=="fr" and "En cours" or "In progress"),self.xStart*1.3,self.yStart+2.1*self.stepY,"top")
-    gc:drawString((device.lang=="fr" and "Etat final" or "Final State"),self.xStart*1.3,self.yStart+3.1*self.stepY,"top")
-    gc:setFont("sansserif", "r", self.txtSize)
     gc:drawString("x = x(init)",self.xStart*1.4,self.yStart+1.5*self.stepY,"top")
+    gc:drawString((device.lang=="fr" and "En cours" or "In progress"),self.xStart*1.3,self.yStart+2.1*self.stepY,"top")
     gc:drawString("x = x",self.xStart*1.4,self.yStart+2.5*self.stepY,"top")
-    gc:setFont("sansserif", "r", self.txtSize*.8)
+    gc:drawString((device.lang=="fr" and "Etat final" or "Final State"),self.xStart*1.3,self.yStart+3.1*self.stepY,"top")
+    gc:setFont("sansserif", "r", self.txtSize*.75)
     gc:drawString("x       =",self.xStart*1.3,self.yStart+3.5*self.stepY,"top")
     gc:drawString("max",self.xStart*1.3+0.9*gc:getStringWidth("x "),self.yStart+3.5*self.stepY*1.02,"top")
     gc:setColorRGB(120,120,0)
-    gc:drawString(myRound(self.xmax,5),gc:getStringWidth("xmax= ")+self.xStart*1.4,self.yStart+3.52*self.stepY,"top")
+    gc:drawString(myRound(self.xmax,5),gc:getStringWidth("xmax= ")+self.xStart*1.35,self.yStart+3.5*self.stepY,"top")
     gc:setFont("sansserif", "r", self.txtSize)
     -- autres colonnes
     for k=1,#self.moles do
@@ -215,7 +213,7 @@ end
 
 function myRound(nbr, preclog)
     local prec = math.pow(10,preclog)
-    return (pwh()<250 and math.floor(prec*nbr)*(1/prec) or nbr)
+    return (pwh()<250 and math.floor(prec*1.000001*nbr)*(1/prec) or nbr)
 end
 
 function recupData()
