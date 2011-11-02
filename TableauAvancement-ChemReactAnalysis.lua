@@ -5,7 +5,7 @@
 -- Parts are from BetterLuaAPI
 -- Source : github.com/adriweb
 
--- Version 1.1
+-- Version 1.25
 
 -- Thanks to Critor, Levak, Jim Bauwens, TI-Planet, Omnimaga...
 
