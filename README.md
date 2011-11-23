@@ -6,7 +6,7 @@
 ### Licence : Creative Commons 2.0 BY-SA : [fr](http://creativecommons.org/licenses/by-sa/2.0/fr/legalcode)/[en](http://creativecommons.org/licenses/by-sa/2.0/legalcode)
 
 
-![Screenshot du tableau](http://i.imgur.com/mhFOu.jpg)
+![Screenshot du tableau](http://tiplanet.org/modules/archives/captures/1320062663avancementnspire.jpg)
 ![Screenshot des détails](http://i.imgur.com/kSYAb.jpg)
 
 ## Comment utiliser :
