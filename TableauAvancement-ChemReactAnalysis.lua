@@ -208,8 +208,8 @@ end
 --  Functions  --
 
 function myRound(nbr, preclog)
-    local prec = math.pow(10,preclog)
-    return (pwh()<250 and math.floor(prec*1.000001*nbr)*(1/prec) or nbr)
+    local prec = pwh()<250 and math.pow(10,preclog) or math.pow(10,2+preclog)
+    return math.floor(prec*1.000001*nbr)*(1/prec)
 end
 
 function recupData()
