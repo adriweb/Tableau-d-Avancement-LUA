@@ -95,11 +95,7 @@ function Tableau:paint(gc)
 	gc:drawLine(self.xStart*1.52+(1+self.nbrReact)*self.stepX*1.005,self.yStart+self.stepY,self.xStart*1.52+(1+self.nbrReact)*self.stepX*1.005,self.yEnd-1)
 	for i=self.xStart*1.65+2*self.stepX,self.xEnd,0.95*self.stepX do
 	    gc:drawLine(i,self.yStart+self.stepY,i,self.yEnd-1)
-	    if i ~= (self.xStart*1.65+2*self.stepX)+(0.95*self.stepX) then
-	        gc:drawString("+",self.xStart+i-.35*self.stepX,self.yStart+.22*self.stepY,"top")
-	    else
-	        gc:drawString("-",self.xStart+i-.35*self.stepX,self.yStart+.21*self.stepY,"top")
-	    end
+	    gc:drawString("+",self.xStart+i-.35*self.stepX,self.yStart+.22*self.stepY,"top")
 	end
 	self:paintTexts(gc)
 end
@@ -147,7 +143,7 @@ function Tableau:paintTexts(gc)
         gc:setColorRGB(0,0,0)
         gc:drawString((k<=self.nbrReact) and "-" or "+",gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(150,0,150)
-        gc:drawString(myRound(self.coeff[k]*self.xmax,4),gc:getStringWidth(" +")+gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
+        gc:drawString(myRound(self.coeff[k]*self.xmax,3),gc:getStringWidth(" +")+gc:getStringWidth(myRound(self.moles[k],3))+self.xStart+(k+.3)*self.stepX,self.yStart+3.1*self.stepY,"top")
         gc:setColorRGB(0,0,0)
         gc:drawString(" = ",self.xStart+(k+.2)*self.stepX,self.yStart+3.5*self.stepY,"top")
         gc:setColorRGB(0,0,150)
