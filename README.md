@@ -1,6 +1,6 @@
 # Tableau d'avancement pour TI-Nspire (v1.3n).
 
-### Fait par Adrien "Adriweb" Bertrand.
+### Fait par Adrien "Adriweb" Bertrand. 
 
 
 ### Licence : Creative Commons 2.0 BY-SA : [fr](http://creativecommons.org/licenses/by-sa/2.0/fr/legalcode)/[en](http://creativecommons.org/licenses/by-sa/2.0/legalcode)
